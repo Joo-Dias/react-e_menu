@@ -9,7 +9,7 @@ export default function Page(){
   return(
     <>
       <div className={styles.containerCenter}>
-        <h1>E-MENU</h1>
+        <h1 className={styles.title}>E-MENU</h1>
 
         <section className={styles.login}>
             <form action="">
@@ -29,7 +29,7 @@ export default function Page(){
                 className={styles.input}  
               />
 
-              <button type='submit'>
+              <button type='submit' className={styles.button}>
                 Acessar
               </button>
             </form>

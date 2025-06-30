@@ -29,7 +29,40 @@
   form button{
     height: 40px;
     font-size: 16px;
+    background-color: var(--red-900);
+    border: 0;
+    border-radius: 8px;
+    color: var(--white);
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+    transition: all .5s;
   }
+
+  form button:hover {
+    transform: scale(1.05);
+  }
+}
+
+.title {
+  color: var(--white);
+}
+
+.input {
+  height: 40px;
+  border: 1px solid var(--gray-100);
+  padding: 0 16px;
+  border-radius: 8px;
+  background-color: var(--dark-900);
+  color: var(--white);
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.700);
+}
+
+.text {
+  color: var(--white);
 }
 
 @media (max-width: 620px) {
