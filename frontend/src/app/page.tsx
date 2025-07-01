@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import styles from './page.module.scss'
 import logoImg from '/public/menu-logo.svg'
 import { api } from '@/services/api'
+import { cookies } from 'next/headers'
 
 import Link from 'next/link'
 
@@ -28,7 +29,15 @@ export default function Page() {
         return
       }
 
-      console.log(response)
+      // Vida útil do token
+      const expressTime = 60 * 60 * 24 * 30 * 1000
+      const cookieStore = await cookies()
+      cookieStore.set("session", response.data.token, {
+        maxAge: expressTime,
+        path: '/',
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production'
+      })
 
     } catch (err) {
       console.log(err)
