@@ -1,9 +1,36 @@
 import styles from './styles.module.scss'
 import { Button } from '../components/button'
+import { api } from '@/services/api'
+import { redirect } from 'next/navigation'
+
+import { getCookieServer } from '@/lib/cookeiServer'
 
 export default function Category() {
-    async function handleRegisterCategory() {
+    async function handleRegisterCategory(formData: FormData) {
         'use server'
+
+        const name = formData.get('name')
+
+        if (name === '') return
+
+        const data = {
+            name: name
+        }
+
+        const token = await getCookieServer()
+
+        const response = await api.post('/category', data, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .catch((err) => {
+                console.log(err)
+                return
+            })
+
+        redirect('/dashboard')
+
     }
 
     return (
