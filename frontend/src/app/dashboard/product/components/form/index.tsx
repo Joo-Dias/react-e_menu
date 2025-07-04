@@ -7,6 +7,8 @@ import Image from 'next/image'
 import { Button } from '@/app/dashboard/components/button'
 import { api } from '@/services/api'
 import { getCookieClient } from '@/lib/cookieClient'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 interface CategoryProps {
     id: string;
@@ -18,6 +20,7 @@ interface Props {
 }
 
 export function Form({ categories }: Props) {
+    const router = useRouter()
     const [image, setImage] = useState<File>()
     const [previewImage, setPreviewImage] = useState('')
 
@@ -27,7 +30,10 @@ export function Form({ categories }: Props) {
         const price = formData.get('price')
         const description = formData.get('description')
 
-        if (!name || !categoryIndex || !price || !description || !image) return
+        if (!name || !categoryIndex || !price || !description || !image) {
+            toast.warning('Preencha todos os campos!')
+            return
+        }
 
         const data = new FormData()
 
@@ -46,7 +52,11 @@ export function Form({ categories }: Props) {
         })
             .catch((err) => {
                 console.log(err)
+                toast.warning("Falha ao cadastrar esse produto!")
             })
+
+        toast.success("Produto registrado com sucesso!")
+        router.push('/dashboard')
     }
 
     function handleFile(e: ChangeEvent<HTMLInputElement>) {
@@ -54,7 +64,7 @@ export function Form({ categories }: Props) {
             const image = e.target.files[0]
 
             if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
-                console.log('Formato proibido!')
+                toast.warning('Formato não permitido!')
                 return
             }
 

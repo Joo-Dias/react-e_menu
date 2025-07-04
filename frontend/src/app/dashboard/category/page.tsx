@@ -4,8 +4,10 @@ import { api } from '@/services/api'
 import { redirect } from 'next/navigation'
 
 import { getCookieServer } from '@/lib/cookeiServer'
+import { toast } from 'sonner'
 
 export default function Category() {
+
     async function handleRegisterCategory(formData: FormData) {
         'use server'
 
@@ -28,10 +30,10 @@ export default function Category() {
                 console.log(err)
                 return
             })
-
         redirect('/dashboard')
 
     }
+
 
     return (
         <main className={styles.container}>

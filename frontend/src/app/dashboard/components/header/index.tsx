@@ -5,13 +5,14 @@ import styles from './styles.module.scss'
 import { LogOutIcon } from 'lucide-react'
 import { deleteCookie } from 'cookies-next'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 export function Header() {
     const router = useRouter()
 
     async function handleLogout() {
         deleteCookie('session', { path: '/' })
-
+        toast.success("Logout feito com sucesso!")
         router.replace('/')
     }
 

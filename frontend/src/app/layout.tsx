@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.scss";
 import { Poppins } from "next/font/google";
+import { Toaster } from 'sonner'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -32,6 +33,13 @@ export default function RootLayout({
   return (
     <html lang="pt-br" className={poppins.className}>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <Toaster position='bottom-right' toastOptions={{
+          style: {
+            backgroundColor: '#f1f1f1',
+            color: '131313',
+            borderColor: 'rgba(255,255,255, 0.5)'
+          }
+        }} />
         {children}
       </body>
     </html>
