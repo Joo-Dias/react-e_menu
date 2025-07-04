@@ -5,7 +5,7 @@ import { OrderProps } from "@/lib/order.type";
 
 async function getOrders(): Promise<OrderProps[] | []> {
     try {
-        const token = await getCookieServer
+        const token = await getCookieServer()
         const response = await api.get('/orders', {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -25,7 +25,7 @@ export default async function Dashboard() {
 
     return (
         <>
-            <Orders />
+            <Orders orders={orders} />
         </>
     )
 }
