@@ -21,7 +21,7 @@ interface OrderItemProps {
     order: {
         id: string;
         table: number;
-        name: string;
+        name: string | null;
         draft: boolean;
         status: boolean;
     }
@@ -29,8 +29,9 @@ interface OrderItemProps {
 
 type OrderContextData = {
     isOpen: boolean;
-    onRequestOpen: (order_id: string) => void;
+    onRequestOpen: (order_id: string) => Promise<void>;
     onRequestClose: () => void;
+    order: OrderItemProps[];
 }
 
 type OrderProviderProps = {
@@ -55,6 +56,7 @@ export function OrderProvider({ children }: OrderProviderProps) {
                 order_id: order_id
             }
         })
+        setOrder(response.data)
         setIsOpen(true)
     }
 
@@ -66,7 +68,8 @@ export function OrderProvider({ children }: OrderProviderProps) {
         <OrderContext.Provider value={{
             isOpen,
             onRequestOpen,
-            onRequestClose
+            onRequestClose,
+            order
         }}>
             {children}
         </OrderContext.Provider>

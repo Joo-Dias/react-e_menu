@@ -6,7 +6,7 @@ import { use } from 'react'
 import { OrderContext } from '@/providers/order'
 
 export function Modalorder() {
-    const { onRequestClose } = use(OrderContext)
+    const { onRequestClose, order } = use(OrderContext)
 
     return (
         <dialog className={styles.dialogContainer}>
@@ -18,14 +18,22 @@ export function Modalorder() {
                 <article className={styles.container}>
                     <h2>Detalhes do pedido</h2>
 
-                    <span className={styles.table}>
-                        Mesa <b>30</b>
+                    {order[0].order.name && (
+                        <span className={styles.table}>
+                            Mesa <b>{order[0].order.table}</b>
+                        </span>
+                    )}
+
+                    <span className={styles.name}>
+                        <b>{order[0].order.name}</b>
                     </span>
 
-                    <section className={styles.item}>
-                        <span>1 - <b> Coca Cola lata</b></span>
-                        <span className={styles.description}>Coca Cola em Lata, 350ml</span>
-                    </section>
+                    {order.map(item => (
+                        <section className={styles.item} key={item.id}>
+                            <span>{item.amount} - <b>{item.product.name}</b></span>
+                            <span className={styles.description}>{item.product.description}</span>
+                        </section>
+                    ))}
 
                     <button className={styles.buttonOrder}>
                         Concluir pedido
