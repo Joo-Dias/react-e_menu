@@ -25,7 +25,7 @@ class CreateProductController {
 
       const file: UploadedFile = req.files['file']
 
-      const resultFile = await new Promise((resolve, reject) => {
+      const resultFile: UploadApiResponse = await new Promise((resolve, reject) => {
         cloudinary.uploader.upload_stream({}, function (error, result) {
           if (error) {
             reject(error)
@@ -36,19 +36,16 @@ class CreateProductController {
         }).end(file.data)
       })
 
-      return res.json({})
-
-      /*
       const product = await createProductService.execute({
         name,
         price,
         description,
-        banner,
+        banner: resultFile.url,
         category_id
       });
 
       return res.json(product)
-      */
+
     }
 
   }
