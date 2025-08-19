@@ -8,6 +8,8 @@ import { AuthContext } from "../../contexts/AuthContext"
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { StackParamsList } from "../../routes/app.routes"
 
+import { api } from "../../services/api"
+
 export default function Dashboard() {
     const navigation = useNavigation<NativeStackNavigationProp<StackParamsList>>()
     const { signOut } = useContext(AuthContext)
@@ -19,8 +21,15 @@ export default function Dashboard() {
             return
         }
 
+        const response = await api.post('/order', {
+            table: Number(number)
+        })
+
         // Precisa fazer a requisação e abrir a mesa e navegar pra próxima tela
-        navigation.navigate('Order', { number: number, order_id: '12345' })
+        navigation.navigate('Order', { number: number, order_id: response.data.id })
+
+        // Limpando o campo de input
+        setNumber('')
     }
     return (
         <SafeAreaView style={styles.container}>

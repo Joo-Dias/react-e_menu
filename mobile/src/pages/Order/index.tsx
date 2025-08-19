@@ -8,7 +8,7 @@ import {
     TextInput
 } from 'react-native'
 
-import { useRoute, RouteProp } from '@react-navigation/native'
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'
 
 import { Feather } from '@expo/vector-icons'
 
@@ -21,14 +21,33 @@ type RouteDetailsParams = {
 
 type OrderRouteProps = RouteProp<RouteDetailsParams, 'Order'>;
 
+import { api } from '../../services/api'
+
 export default function Order() {
-    const route = useRoute<OrderRouteProps>();
+
+    const route = useRoute<OrderRouteProps>()
+    const navigation = useNavigation()
+
+    async function handleCloseOrder() {
+        try {
+            await api.delete('/order', {
+                params: {
+                    // Utilizando a rota para receber parametros & colocar "?" nos params para não crashar a aplicação
+                    order_id: route.params?.order_id
+                }
+            })
+
+            navigation.goBack()
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Mesa {route.params.number}</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleCloseOrder}>
                     <Feather name='trash-2' size={29} color='#FF3F4b' />
                 </TouchableOpacity>
             </View>
