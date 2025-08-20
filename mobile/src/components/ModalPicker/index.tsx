@@ -19,6 +19,7 @@ const { width: WIDTH, height: HEIGHT } = Dimensions.get('window')
 
 export function ModalPicker({ options, handleCloseModal, selectedItem }: ModalPickerProps) {
 
+    // Selecionando o item assim que clicar nele e depois fechando o modal
     function onPressItem(item: CategoryProps) {
         selectedItem(item)
         handleCloseModal()

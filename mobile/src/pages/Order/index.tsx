@@ -57,6 +57,7 @@ export default function Order() {
         loadInfo()
     }, [])
 
+    // Função para fechar a mesa (order)
     async function handleCloseOrder() {
         try {
             await api.delete('/order', {
@@ -72,6 +73,7 @@ export default function Order() {
         }
     }
 
+    // Função para mudar a categoria que está selecionada
     function handleChangeCategory(item: CategoryProps) {
         setCategorySelected(item)
     }
