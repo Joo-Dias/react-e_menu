@@ -6,10 +6,12 @@ import {
     StyleSheet,
     TouchableOpacity,
     TextInput,
-    Modal
+    Modal,
+    FlatList
 } from 'react-native'
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'
 import { ModalPicker } from '../../components/ModalPicker'
+import { ListItem } from '../../components/ListItem'
 import { Feather } from '@expo/vector-icons'
 
 import { api } from '../../services/api'
@@ -33,6 +35,13 @@ type ProductProps = {
     name: string;
 }
 
+type ItemProps = {
+    id: string;
+    product_id: string;
+    name: string;
+    amout: string | number;
+}
+
 export default function Order() {
 
     const route = useRoute<OrderRouteProps>()
@@ -43,8 +52,6 @@ export default function Order() {
     // Recebendo o objeto
     const [categorySelected, setCategorySelected] = useState<CategoryProps>()
 
-    const [amount, setAmount] = useState('1')
-
     // useState para controlar quado o modal está aberto ou fechado
     const [modalCategoryVisible, setModalCategoryVisible] = useState(false)
 
@@ -54,6 +61,9 @@ export default function Order() {
     const [productSelected, setProductSelected] = useState<ProductProps | undefined>()
     // useState para controlar o modal
     const [modalProductVisible, setModalProductVisible] = useState(false)
+
+    const [amount, setAmount] = useState('1')
+    const [items, setItems] = useState<ItemProps[]>([])
 
     // useEffect para carregar o array de categorias
     useEffect(() => {
@@ -112,13 +122,33 @@ export default function Order() {
         setProductSelected(item)
     }
 
+    // Função para adicionar produtos na lista da mesa
+    async function handleAdd() {
+        const response = await api.post('order/add', {
+            order_id: route.params?.order_id,
+            product_id: productSelected?.id,
+            amount: Number(amount)
+        })
+
+        let data = {
+            id: response.data.id,
+            product_id: productSelected?.id as string,
+            name: productSelected?.name as string,
+            amount: amount
+        }
+
+        setItems(oldArray => [...oldArray, data])
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Mesa {route.params.number}</Text>
-                <TouchableOpacity onPress={handleCloseOrder}>
-                    <Feather name='trash-2' size={29} color='#FF3F4b' />
-                </TouchableOpacity>
+                {items.length === 0 && (
+                    <TouchableOpacity onPress={handleCloseOrder}>
+                        <Feather name='trash-2' size={29} color='#FF3F4b' />
+                    </TouchableOpacity>
+                )}
             </View>
 
             {category.length !== 0 && (
@@ -152,14 +182,26 @@ export default function Order() {
             </View>
 
             <View style={styles.actions}>
-                <TouchableOpacity style={styles.buttonAdd}>
+                <TouchableOpacity style={styles.buttonAdd} onPress={handleAdd}>
                     <Text style={styles.buttonText}>+</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity
+                    style={[styles.button, { opacity: items.length === 0 ? 0.3 : 1 }]}
+                    disabled={items.length === 0}
+
+                >
                     <Text style={styles.buttonText}>Avançar</Text>
                 </TouchableOpacity>
             </View>
+
+            <FlatList
+                showsVerticalScrollIndicator={false}
+                style={{ flex: 1, marginTop: 24 }}
+                data={items}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => <ListItem data={item} />}
+            />
 
             <Modal
                 transparent={true}
