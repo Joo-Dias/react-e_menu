@@ -140,6 +140,23 @@ export default function Order() {
         setItems(oldArray => [...oldArray, data])
     }
 
+    // Função para remover um produto na lista da mesa
+    async function handleDeleteItem(item_id: string) {
+        await api.delete('/order/remove', {
+            params: {
+                item_id: item_id
+            }
+        })
+
+        // Após remover o produto, atualizar a lista de items
+        let removeItem = items.filter(item => {
+            return (item.id !== item_id)
+        })
+
+        // Passando o novo array para a nossa lista de produtos sem o produto removido
+        setItems(removeItem)
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -200,7 +217,7 @@ export default function Order() {
                 style={{ flex: 1, marginTop: 24 }}
                 data={items}
                 keyExtractor={(item) => item.id}
-                renderItem={({ item }) => <ListItem data={item} />}
+                renderItem={({ item }) => <ListItem data={item} deleteItem={handleDeleteItem} />}
             />
 
             <Modal
